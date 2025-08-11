@@ -18,17 +18,17 @@ const Upload = () => {
     if (foodName) formData.append('food_name', foodName);
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/apidetect/detect/', {
+      const response = await fetch('http://127.0.0.1:8000/api/detect/', {
         method: 'POST',
         body: formData,
       });
 
       const data = await response.json();
-
+      var macros={calories:500,protein:20,carbs:35,fats:15}
       navigate('/result', {
         state: {
-          macros: data,
-          foodName: foodName || 'Detected Food',
+          macros: macros,
+          foodName: data.prediction || 'Detected Food',
           imageUrl: image ? URL.createObjectURL(image) : null,
         },
       });
@@ -36,6 +36,7 @@ const Upload = () => {
       console.error('Error:', error);
     }
   };
+
 
   return (
     <div className="upload-page modern">

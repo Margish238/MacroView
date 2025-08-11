@@ -6,7 +6,7 @@ const MacroResult = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { macros, foodName, imageUrl } = location.state || {};
-
+  
   if (!macros) {
     return (
       <div className="macro-result modern">

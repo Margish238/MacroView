@@ -55,9 +55,12 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 
     "corsheaders.middleware.CorsMiddleware",
+    'django.middleware.common.CommonMiddleware',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True#true or urls to communicate with other servers
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # or whatever your frontend URL is
+]#true or urls to communicate with other servers
 
 ROOT_URLCONF = "backend.urls"
 
@@ -91,6 +94,10 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
+    },
+    'food_db': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'nutrients.sqlite3',#Extra database
     }
 }
 
