@@ -8,6 +8,7 @@ import Login from './components/login';
 import Signup from './components/signup';
 import Profile from './components/profile';
 import DashboardCardView from './components/dashboardRingView';
+import FoodDetails from './components/FoodDetails';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -19,7 +20,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/upload" element={<Upload/>} />
         <Route path="/result" element={<MacroResult />} />
-        <Route path="/suggestions" element={<div>Suggestions</div>} />
+        <Route path="/food-details" element={<FoodDetails />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />

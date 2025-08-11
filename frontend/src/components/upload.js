@@ -13,6 +13,12 @@ const Upload = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!image && !foodName) {
+      alert("Please upload an image or enter a food name.");
+      return;
+    }
+
     const formData = new FormData();
     if (image) formData.append('image', image);
     if (foodName) formData.append('food_name', foodName);
@@ -23,28 +29,38 @@ const Upload = () => {
         body: formData,
       });
 
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+
       const data = await response.json();
-      var macros={calories:500,protein:20,carbs:35,fats:15}
+
       navigate('/result', {
         state: {
-          macros: macros,
+          macros: data.macros || {},
           foodName: data.prediction || 'Detected Food',
+          others: data.values || [],
           imageUrl: image ? URL.createObjectURL(image) : null,
         },
       });
     } catch (error) {
       console.error('Error:', error);
+      alert("Something went wrong while processing your request.");
     }
   };
 
-
   return (
     <div className="upload-page modern">
-      <h2 className="upload-heading">Upload Your Food</h2>
+      <h2 className="upload-heading">Search Your Food</h2>
 
       <form className="upload-form" onSubmit={handleSubmit}>
         <label htmlFor="imageInput" className="upload-label">Choose Image:</label>
-        <input type="file" accept="image/*" onChange={handleImageChange} className="upload-input" />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="upload-input"
+        />
 
         <label htmlFor="foodName" className="upload-label">Or Enter Food Name:</label>
         <input
@@ -55,7 +71,7 @@ const Upload = () => {
           className="upload-text"
         />
 
-        <button type="submit-btn" className="upload-button">Submit</button>
+        <button type="submit" className="upload-button">Submit</button>
       </form>
     </div>
   );
