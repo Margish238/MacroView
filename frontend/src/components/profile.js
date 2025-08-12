@@ -30,6 +30,13 @@ const Profile = () => {
     },
   ];
 
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    alert('Logged out');
+    window.location.href = '/login';
+  };
+
   return (
     <div className="profile-container modern">
       {/* Profile Box */}
@@ -40,7 +47,7 @@ const Profile = () => {
         <p><strong>Joined:</strong> {user.joined}</p>
         <p><strong>Goal:</strong> {user.goal}</p>
         <button className="edit-button">Edit</button>
-        <button className="logout-button">Logout</button>
+        <button className="logout-button" onClick={handleLogout}>Logout</button>
       </div>
 
       {/* Macro History Box */}

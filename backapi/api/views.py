@@ -7,23 +7,21 @@ from django.db import connections
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
-from .models import predict_image  # Import your model
+from .models import predict_image
 
 
-# @api_view(['POST'])
-def data1(input_food):
+def getData(input_food):
+    search=str(input_food).split('_')
     with connections['food_db'].cursor() as cursor:
-        cursor.execute(
-            'SELECT * FROM merged_food_data WHERE food LIKE %s',
-            [f"%{input_food}%"]
-        )
+        # print(search,'\n',cursor)
+        query = """SELECT * FROM merged_food_data WHERE """ + " AND ".join(["LOWER(food) LIKE %s" for _ in search])
+        params = [f"%{opt.lower()}%" for opt in search]
+        cursor.execute(query, params)
         columns = [col[0] for col in cursor.description]
         rows = cursor.fetchall()
     return [dict(zip(columns, row)) for row in rows]
 
-
 def extract_macros(values):
-    """Extract macros from the first DB match if available"""
     if values and isinstance(values, list) and len(values) > 0:
         first = values[0]
         return {
@@ -44,7 +42,7 @@ class FoodDetectView(APIView):
         # Case 1: Food name provided directly
         if request.POST.get('food_name'):
             prediction = request.POST.get('food_name')
-            values = data1(prediction)
+            values = getData(prediction)
             macros = extract_macros(values)
             return Response({
                 "prediction": prediction,
@@ -56,7 +54,9 @@ class FoodDetectView(APIView):
         if 'image' in request.FILES:
             image = request.FILES['image']
             prediction = predict_image(image)  # This should return the food name
-            values = data1(prediction)
+            print(prediction)
+            values = getData(prediction)
+            # print(values)
             macros = extract_macros(values)
             return Response({
                 "prediction": prediction,
@@ -65,12 +65,3 @@ class FoodDetectView(APIView):
             })
 
         return Response({"error": "No food name or image provided"}, status=400)
-    
-# @api_view(['POST'])
-# def register_user(request):
-#     username = request.data.get('username')
-#     password = request.data.get('password')
-#     if User.objects.filter(username=username).exists():
-#         return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
-#     user = User.objects.create_user(username=username, password=password)
-#     return Response({'message': 'User created successfully'})

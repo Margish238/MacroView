@@ -1,74 +1,47 @@
 import React, { useState } from 'react';
+import { signupUser } from './AuthService';
 import './Auth.css';
-import { useNavigate } from 'react-router-dom';
 
-const Signup = () => {
-  const navigate = useNavigate();
-  const [userData, setUserData] = useState({ name: '', email: '', password: '' });
-
+export default function Signup() {
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+    password2: ''
+  });
+  
   const handleChange = (e) => {
-    setUserData({ ...userData, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/signup/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        navigate('/login');
-      } else {
-        alert(data.message || 'Signup failed');
-      }
-    } catch (error) {
-      console.error(error);
+      await signupUser(formData);
+      alert('Signup successful, please login');
+      window.location.href = '/login';
+    } catch (err) {
+      alert(err.message);
     }
   };
 
   return (
-    <div className="auth-page modern">
-      <div className="auth-container">
-        <h2 className="auth-title">Sign Up</h2>
-        <form className="auth-form" onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="name"
-            placeholder="Full Name"
-            className="auth-input"
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            className="auth-input"
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            className="auth-input"
-            onChange={handleChange}
-            required
-          />
-          <button type="submit" className="auth-button">Sign Up</button>
+    <div className="auth-container">
+      <div className="auth-card">
+        <h2>Sign Up</h2>
+        <form onSubmit={handleSignup}>
+          <input name="username" placeholder="Username" onChange={handleChange} />
+          <input name="email" placeholder="Email" onChange={handleChange} />
+          <input type="password" name="password" placeholder="Password" onChange={handleChange} />
+          <input type="password" name="password2" placeholder="Confirm Password" onChange={handleChange} />
+          <button type="submit">Sign Up</button>
         </form>
-        <p className="auth-switch">
-          Already have an account? <a href="/login">Login</a>
-        </p>
+        <div className="auth-footer">
+          <p>
+            Already have an account? <a href="/login">Login</a>
+          </p>
+        </div>
       </div>
     </div>
   );
-};
-
-export default Signup;
+}
