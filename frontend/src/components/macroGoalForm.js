@@ -1,46 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import './MacroGoalForm.css';
 
-const MacroGoalForm = ({ onSubmit }) => {
+export default function MacroGoalForm() {
   const [goals, setGoals] = useState({
-    calories: '',
-    protein: '',
-    carbs: '',
-    fat: '',
+    calories: 2000,
+    protein: 150,
+    carbs: 250,
+    fat: 70,
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setGoals({ ...goals, [name]: value });
+    setGoals({ ...goals, [e.target.name]: Number(e.target.value) });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(goals);
+    const token = localStorage.getItem("accessToken");
+
+    const response = await fetch("http://127.0.0.1:8000/accounts/summary/update_goals/", {
+      method: "PATCH",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ goals }),
+    });
+
+    if (response.ok) {
+      await response.json();
+      alert("Goals updated successfully!");
+    } else {
+      alert("Failed to update goals.");
+    }
   };
 
   return (
-    <form className="macro-goal-form modern" onSubmit={handleSubmit}>
-      <h2>Set Daily Macro Goals</h2>
-      <div className="form-group">
-        <label>Calories</label>
-        <input type="number" name="calories" value={goals.calories} onChange={handleChange} />
-      </div>
-      <div className="form-group">
-        <label>Protein (g)</label>
-        <input type="number" name="protein" value={goals.protein} onChange={handleChange} />
-      </div>
-      <div className="form-group">
-        <label>Carbs (g)</label>
-        <input type="number" name="carbs" value={goals.carbs} onChange={handleChange} />
-      </div>
-      <div className="form-group">
-        <label>Fat (g)</label>
-        <input type="number" name="fat" value={goals.fat} onChange={handleChange} />
-      </div>
-      <button type="submit">Save Goals</button>
-    </form>
+    <div className="macro-goal-form">
+      <h2>Update Your Goals</h2>
+      <label>Push Your Limit to Next Level</label>
+      <form onSubmit={handleSubmit}>
+        <input type="number" name="calories" value={goals.calories} onChange={handleChange} placeholder="Calories" />
+        <input type="number" name="protein" value={goals.protein} onChange={handleChange} placeholder="Protein" />
+        <input type="number" name="carbs" value={goals.carbs} onChange={handleChange} placeholder="Carbs" />
+        <input type="number" name="fat" value={goals.fat} onChange={handleChange} placeholder="Fat" />
+        <button type="submit">Update Goals</button>
+      </form>
+    </div>
   );
-};
-
-export default MacroGoalForm;
+}

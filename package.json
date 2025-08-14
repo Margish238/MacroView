@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@mantine/core": "^8.2.4",
+    "@mantine/hooks": "^8.2.4",
+    "recharts": "^3.1.2"
+  }
+}

@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
-from .models import MacroTrack
+from .models import MacroTrack,DailyMacroSummary
 
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
@@ -80,3 +80,10 @@ class MacroTrackSerializer(serializers.ModelSerializer):
         model = MacroTrack
         fields = ['id','user', 'food_name', 'calories', 'protein', 'carbs', 'fats', 'date', 'day']
         read_only_fields = ['id', 'user', 'food_name', 'calories', 'protein', 'carbs', 'fats', 'date', 'day']
+
+
+class DailyMacroSummarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DailyMacroSummary
+        fields = '__all__'
+

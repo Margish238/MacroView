@@ -4,8 +4,14 @@ from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .serializers import UserSerializer, RegisterSerializer, UserSerializer, UserUpdateSerializer, ChangePasswordSerializer,MacroTrackSerializer
+from .serializers import UserSerializer, RegisterSerializer, UserSerializer, UserUpdateSerializer, ChangePasswordSerializer,MacroTrackSerializer,DailyMacroSummarySerializer
 from .models import MacroTrack
+from .utils import ensure_today_summary
+from .serializers import DailyMacroSummarySerializer
+from rest_framework import status
+from .models import DailyMacroSummary
+from datetime import date
+
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -71,3 +77,41 @@ class UserHistoryView(APIView):
         macros = MacroTrack.objects.filter(user=request.user).order_by('-date')
         serializer = MacroTrackSerializer(macros, many=True)
         return Response(serializer.data)
+
+class EnsureTodaySummaryView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        summary = ensure_today_summary(request.user)
+        serializer = DailyMacroSummarySerializer(summary)
+        return Response(serializer.data)
+    
+class UpdateGoalsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request):
+        try:
+            summary = DailyMacroSummary.objects.get(user=request.user, date=date.today())
+        except DailyMacroSummary.DoesNotExist:
+            return Response({"error": "No summary found for today"}, status=status.HTTP_404_NOT_FOUND)
+
+        goals_data = request.data.get("goals", {})
+        if not isinstance(goals_data, dict):
+            return Response({"error": "Invalid goals format"}, status=status.HTTP_400_BAD_REQUEST)
+
+        summary.goals = goals_data
+        summary.save()
+
+        serializer = DailyMacroSummarySerializer(summary)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class TodaySummaryView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            summary = DailyMacroSummary.objects.get(user=request.user, date=date.today())
+            serializer = DailyMacroSummarySerializer(summary)
+            return Response(serializer.data)
+        except DailyMacroSummary.DoesNotExist:
+            return Response({"error": "No summary found for today."}, status=404)
