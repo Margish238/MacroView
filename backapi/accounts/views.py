@@ -10,8 +10,7 @@ from .utils import ensure_today_summary
 from .serializers import DailyMacroSummarySerializer
 from rest_framework import status
 from .models import DailyMacroSummary
-from datetime import date
-
+from datetime import timedelta, date
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -115,3 +114,43 @@ class TodaySummaryView(APIView):
             return Response(serializer.data)
         except DailyMacroSummary.DoesNotExist:
             return Response({"error": "No summary found for today."}, status=404)
+        
+class WeeklySummaryView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        today = date.today()
+        start_date = today - timedelta(days=6)  # last 7 days
+
+        # Fetch summaries for the range
+        summaries = DailyMacroSummary.objects.filter(
+            user=request.user,
+            date__range=(start_date, today)
+        )
+
+        # Create a dict for quick lookup
+        summary_map = {s.date: s for s in summaries}
+
+        # Build full 7-day list
+        data = []
+        for i in range(7):
+            current_day = start_date + timedelta(days=i)
+            if current_day in summary_map:
+                s = summary_map[current_day]
+                data.append({
+                    "day": s.day,
+                    "calories_sum": s.calories_sum,
+                    "protein_sum": s.protein_sum,
+                    "carbs_sum": s.carbs_sum,
+                    "fat_sum": s.fat_sum
+                })
+            else:
+                data.append({
+                    "day": current_day.strftime("%a"),  # e.g. Mon, Tue
+                    "calories_sum": 0,
+                    "protein_sum": 0,
+                    "carbs_sum": 0,
+                    "fat_sum": 0
+                })
+
+        return Response(data)

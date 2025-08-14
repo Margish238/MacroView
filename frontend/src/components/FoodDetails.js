@@ -45,18 +45,18 @@ const FoodDetails = () => {
       },
       body: JSON.stringify({
         food_name: mainNutrients.food,
-        calories: ((mainNutrients.calories*quantity)/100),
-        protein: ((mainNutrients.protein*quantity)/100),
-        carbs: ((mainNutrients.carbs*quantity)/100),
-        fats: ((mainNutrients.fats*quantity)/100)
+        calories: ((mainNutrients.calories*quantity)/100).toFixed(3),
+        protein: ((mainNutrients.protein*quantity)/100).toFixed(3),
+        carbs: ((mainNutrients.carbs*quantity)/100).toFixed(3),
+        fats: ((mainNutrients.fats*quantity)/100).toFixed(3)
       })
     });
 
-    const data = await response.json();
+    await response.json();
     if (response.ok) {
       alert("Food added to your goals!");
     } else {
-      alert(JSON.stringify(data)); // ✅ show actual error
+      alert("You must be logged in"); // ✅ show actual error
     }
     } catch (error) {
       console.error("Error:", error);

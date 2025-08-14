@@ -30,7 +30,7 @@ export default function MacroGoalForm() {
       await response.json();
       alert("Goals updated successfully!");
     } else {
-      alert("Failed to update goals.");
+      alert("Failed to update goals.You must be logged in.");
     }
   };
 

@@ -14,7 +14,7 @@ def getData(input_food):
     search=str(input_food).split('_')
     with connections['food_db'].cursor() as cursor:
         # print(search,'\n',cursor)
-        query = """SELECT * FROM merged_food_data WHERE """ + " AND ".join(["LOWER(food) LIKE %s" for _ in search])
+        query = """SELECT * FROM merged_food_data WHERE """ + " OR ".join(["LOWER(food) LIKE %s" for _ in search])
         params = [f"%{opt.lower()}%" for opt in search]
         cursor.execute(query, params)
         columns = [col[0] for col in cursor.description]
