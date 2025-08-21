@@ -18,7 +18,6 @@ const Navbar = () => {
         <div className={`nav-links ${isOpen ? 'open' : ''}`}>
           <li><Link to="/upload" title="Upload Food"><FiSearch size={20} color="#f5f5f5" /></Link></li>
           <li><Link to="/" onClick={toggleMenu}>Home</Link></li>
-          {/* <li><Link  onClick={handleLogout}>LogOut</Link></li> */}
           <li><Link to="/login" onClick={toggleMenu}>Login</Link></li>
           <li><Link to="/profile" onClick={toggleMenu}>Profile</Link></li>
         </div>
@@ -26,7 +25,6 @@ const Navbar = () => {
         <div className="hamburger" onClick={toggleMenu}>
           <div className="bar"></div>
           <div className="bar"></div>
-          {/* <div className="bar"></div> */}
           <div className="bar"></div>
           <div className="bar"></div>
         </div>

@@ -1,3 +1,4 @@
+// import { Navigate } from 'react-router-dom';
 import './Profile.css';
 import React, { useEffect, useState } from "react";
 
@@ -74,7 +75,12 @@ const Profile = () => {
       .then((data) => alert(data.message || "Error changing password"));
   };
 
-  if (!userData) return <p>Loading...</p>;
+  if (!userData) return(
+    <div className='noUser'>
+      <p>Log into your profile </p>
+      <button onClick={()=>window.location.href = '/login'}>Login</button>
+    </div>
+  );
 
 
   const handleLogout = () => {

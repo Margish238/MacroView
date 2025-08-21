@@ -107,7 +107,7 @@ const WeeklyTrends = () => {
 
   return (
     <div className="weekly-trends modern">
-      <h2 className="chart-title">Weekly Macro Trends</h2>
+      <h2 className="chart-title">Weekly Macro Graph</h2>
       <div className="chart-container">
         <Line data={chartData} options={options} ></Line>
       </div>
