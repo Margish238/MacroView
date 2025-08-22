@@ -33,7 +33,6 @@ def update_daily_macro_summary(user):
     """Recalculate and update the daily macro summary for the given user."""
     today = date.today()
 
-    # Step 1: Get sums of macros for this user & date
     sums = MacroTrack.objects.filter(user=user, date=today).aggregate(
         total_calories=Sum("calories"),
         total_protein=Sum("protein"),
@@ -41,7 +40,7 @@ def update_daily_macro_summary(user):
         total_fat=Sum("fats")
     )
 
-    # Step 2: Ensure summary row exists
+    # check summary row exists
     summary, _ = DailyMacroSummary.objects.get_or_create(
         user=user,
         date=today,
@@ -54,7 +53,7 @@ def update_daily_macro_summary(user):
         }
     )
 
-    # Step 3: Update sums in the summary
+    # Update sums in the summary
     summary.calories_sum = sums["total_calories"] or 0
     summary.protein_sum = sums["total_protein"] or 0
     summary.carbs_sum = sums["total_carbs"] or 0

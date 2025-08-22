@@ -92,7 +92,6 @@ const Profile = () => {
 
   return (
     <div className="profile-container modern">
-      {/* Profile Box */}
       <div className="profile-box">
         <h2>Your Profile</h2>
         <p><strong>Username:</strong> {userData.username}</p>
@@ -115,7 +114,6 @@ const Profile = () => {
         <button className="logout-button" onClick={handleLogout}>Logout</button>
       </div>
 
-      {/* Macro History Box */}
       <div className="macro-box">
         <h2 className="macro-title">Tracked Macro History</h2>
           {macros.length > 0 ? (

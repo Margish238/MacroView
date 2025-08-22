@@ -10,10 +10,10 @@ const DashboardRingView = () => {
   const token = localStorage.getItem("accessToken");
 
   const macroColors = {
-    calories: '#f97316', // orange
-    protein: '#10b981',  // green
-    carbs: '#3b82f6',    // blue
-    fat: '#eab308',      // yellow
+    calories: '#f97316', 
+    protein: '#10b981',  
+    carbs: '#3b82f6',   
+    fat: '#eab308',      
   };
 
   useEffect(() => {
@@ -25,7 +25,6 @@ const DashboardRingView = () => {
           return;
         }
 
-        // Step 1: Ensure today's entry exists/updated
         const ensureRes = await fetch("http://127.0.0.1:8000/accounts/summary/ensure_today/", {
           method: "POST",
           headers: {
@@ -36,7 +35,6 @@ const DashboardRingView = () => {
 
         if (!ensureRes.ok) throw new Error("Failed to ensure today's data");
 
-        // Step 2: Fetch today's summary
         const todayRes = await fetch("http://127.0.0.1:8000/accounts/summary/today/", {
           headers: { Authorization: `Bearer ${token}` },
         });

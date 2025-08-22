@@ -1,4 +1,4 @@
-// src/components/WeeklyTrends.js
+
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import "./WeeklyTrends.css";

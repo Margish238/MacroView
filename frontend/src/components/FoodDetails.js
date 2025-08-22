@@ -17,10 +17,9 @@ const FoodDetails = () => {
     );
   }
 
-  // Extract main nutrients
   const mainNutrients = {
     food: foodData.food,
-    calories: foodData["Caloric Value"], // Column name with space
+    calories: foodData["Caloric Value"], 
     protein: foodData.Protein,
     carbs: foodData.Carbohydrates,
     fats: foodData.Fat
@@ -28,7 +27,6 @@ const FoodDetails = () => {
 
   const otherNutrients = Object.entries(foodData).filter(([key]) => !['','food', 'Caloric Value', 'Protein', 'Carbohydrates', 'Fat'].includes(key));
 
-  // Function to add food to user's goals/log
   const addToGoals = async () => {
   const token = localStorage.getItem("accessToken");
   if (!token) {
@@ -56,7 +54,7 @@ const FoodDetails = () => {
     if (response.ok) {
       alert("Food added to your goals!");
     } else {
-      alert("You must be logged in"); // ✅ show actual error
+      alert("You must be logged in");
     }
     } catch (error) {
       console.error("Error:", error);
@@ -68,7 +66,6 @@ const FoodDetails = () => {
     <div className="food-details modern">
       <h2>Food Details</h2>
 
-      {/* Main Nutrients Table */}
       <table className="nutrient-table">
         <thead>
           <tr>
@@ -90,11 +87,9 @@ const FoodDetails = () => {
         </tbody>
       </table>
 
-      {/* Save Button */}
       <input type="number" min="1" step="1" value={quantity} onChange={(e) => setQuantity(e.target.value)} placeholder="Enter weight in grams"/>
       <button onClick={addToGoals} className="back-btn">Add To Goals</button>
 
-      {/* Other Nutrients Table */}
       {otherNutrients.length > 0 && (
         <>
           <h3>Other Nutrients</h3>
@@ -116,8 +111,6 @@ const FoodDetails = () => {
           </table>
         </>
       )}
-
-      {/* Back Button */}
       <button onClick={() => navigate(-1)} className="back-btn">Go Back</button>
     </div>
   );

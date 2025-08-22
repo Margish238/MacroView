@@ -15,12 +15,10 @@ df5=pd.read_csv(f5)
 
 df = pd.concat([df1, df2, df3, df4, df5], ignore_index=True)
 
-# Check the shape and first rows
 print(df.shape)
 print(df.head())
 
 # df.to_csv("merged_food_data.csv", index=True)
-# print("Merged dataset saved to merged_food_data.csv")
 df=df.iloc[:,2:]
 print(df.head())
 # df.to_csv("merged_food_data.csv", index=True)

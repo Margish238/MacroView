@@ -72,7 +72,6 @@ class UserHistoryView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        # Fetch all macro entries for logged-in user
         macros = MacroTrack.objects.filter(user=request.user).order_by('-date')
         serializer = MacroTrackSerializer(macros, many=True)
         return Response(serializer.data)
@@ -122,16 +121,13 @@ class WeeklySummaryView(APIView):
         today = date.today()
         start_date = today - timedelta(days=6)  # last 7 days
 
-        # Fetch summaries for the range
         summaries = DailyMacroSummary.objects.filter(
             user=request.user,
             date__range=(start_date, today)
         )
 
-        # Create a dict for quick lookup
         summary_map = {s.date: s for s in summaries}
 
-        # Build full 7-day list
         data = []
         for i in range(7):
             current_day = start_date + timedelta(days=i)
@@ -146,7 +142,7 @@ class WeeklySummaryView(APIView):
                 })
             else:
                 data.append({
-                    "day": current_day.strftime("%a"),  # e.g. Mon, Tue
+                    "day": current_day.strftime("%a"),
                     "calories_sum": 0,
                     "protein_sum": 0,
                     "carbs_sum": 0,

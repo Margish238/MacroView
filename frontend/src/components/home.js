@@ -30,7 +30,6 @@ const Home = () => {
     <footer className="footer">
       <div className="footer-container">
         
-        {/* Company Info */}
         <div className="footer-section">
           <h2 className="footer-logo">MacroView</h2>
           <p className="footer-text">
@@ -39,7 +38,6 @@ const Home = () => {
           </p>
         </div>
 
-        {/* Quick Links */}
         <div className="footer-section">
           <h3 className="footer-heading">Quick Links</h3>
           <ul className="footer-links">
@@ -48,8 +46,6 @@ const Home = () => {
             <li><a href="#contact">Contact</a></li>
           </ul>
         </div>
-
-        {/* Social Media */}
         <div className="footer-section">
           <h3 className="footer-heading">Follow Us</h3>
           <div className="footer-socials">
@@ -61,7 +57,6 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Bottom Bar */}
       <div className="footer-bottom">
         © {new Date().getFullYear()} MacroView. All rights reserved. | Designed with ❤️ for better health
       </div>

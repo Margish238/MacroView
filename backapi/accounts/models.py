@@ -15,9 +15,8 @@ class MacroTrack(models.Model):
     day = models.CharField(max_length=20, blank=True)
 
     def save(self, *args, **kwargs):
-        # Auto-fill day from date
         if not self.day:
-            self.day = self.date.strftime("%A")  # e.g., Monday
+            self.day = self.date.strftime("%A")
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -25,15 +24,11 @@ class MacroTrack(models.Model):
 
 
 class DailyMacroSummary(models.Model):
-    """
-    Stores per-user, per-day macro sums + goals (goals is a dict).
-    Sums will be computed from MacroTrack in later steps.
-    """
+    
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='daily_summaries')
     date = models.DateField(default=timezone.localdate, db_index=True)
     day = models.CharField(max_length=9, blank=True)  # e.g., Monday
 
-    # goals is a dict: {"calories": 0, "protein": 0, "carbs": 0, "fat": 0}
     goals = models.JSONField(default=dict, blank=True)
 
     calories_sum = models.FloatField(default=0)
@@ -46,13 +41,11 @@ class DailyMacroSummary(models.Model):
         ordering = ['-date']
 
     def save(self, *args, **kwargs):
-        # Ensure day string and normalize goals keys
         if not self.day:
             self.day = (self.date or timezone.localdate()).strftime('%A')
 
         if not isinstance(self.goals, dict):
             self.goals = {}
-        # normalize required keys so frontend always gets all four
         for k in ('calories', 'protein', 'carbs', 'fat'):
             self.goals.setdefault(k, 0)
 

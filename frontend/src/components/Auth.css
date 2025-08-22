@@ -1,4 +1,4 @@
-/* Auth.css */
+
 body {
   background-color: #1f2937;
   font-family: Arial, sans-serif;
@@ -7,7 +7,6 @@ body {
   padding: 0;
 }
 
-/* Center everything */
 .auth-container {
   display: flex;
   justify-content: center;
